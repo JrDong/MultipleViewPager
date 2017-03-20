@@ -3,6 +3,7 @@ package com.djr.multipleviewpager.viewpager;
 import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 
 /**
@@ -19,14 +20,7 @@ public class InterceptorViewPager extends ViewPager {
 
     public InterceptorViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        init();
-
     }
-
-    private void init() {
-    }
-
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -43,10 +37,22 @@ public class InterceptorViewPager extends ViewPager {
                 moveX = ev.getX();
                 offsetX = moveX - startX;
                 if (offsetX < 0) {
-                    performRightScroll();
+                    //当滑动最后一个条目时,让父view处理事件
+                    if (getCurrentItem() == getAdapter().getCount() - 1) {
+                        getParent().requestDisallowInterceptTouchEvent(false);
+                    } else {
+                        getParent().requestDisallowInterceptTouchEvent(true);
+                    }
                 } else {
-                    performLeftScroll();
+                    //当滑动第一个条目时,让父view处理事件
+                    if (getCurrentItem() == 0) {
+                        getParent().requestDisallowInterceptTouchEvent(false);
+                    } else {
+                        getParent().requestDisallowInterceptTouchEvent(true);
+                    }
                 }
+
+                Log.e("dispatchTouchEvent","dispatchTouchEvent  "+ offsetX);
                 break;
             default:
                 break;
@@ -54,29 +60,4 @@ public class InterceptorViewPager extends ViewPager {
 
         return super.dispatchTouchEvent(ev);
     }
-
-    /**
-     * 处理向左滑动
-     */
-    private void performLeftScroll() {
-        //当滑动第一个条目时,让父view处理事件
-        if (getCurrentItem() == 0) {
-            getParent().requestDisallowInterceptTouchEvent(false);
-        } else {
-            getParent().requestDisallowInterceptTouchEvent(true);
-        }
-    }
-
-    /**
-     * 处理向右滑动
-     */
-    private void performRightScroll() {
-        //当滑动最后一个条目时,让父view处理事件
-        if (getCurrentItem() == getAdapter().getCount() - 1) {
-            getParent().requestDisallowInterceptTouchEvent(false);
-        } else {
-            getParent().requestDisallowInterceptTouchEvent(true);
-        }
-    }
-
 }
