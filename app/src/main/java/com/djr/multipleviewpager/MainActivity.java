@@ -5,12 +5,12 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.djr.multipleviewpager.fragment.DiscoveryFragment;
 import com.djr.multipleviewpager.fragment.DynamicFragment;
 import com.djr.multipleviewpager.fragment.MineFragment;
+import com.djr.multipleviewpager.viewpager.InterceptorViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.tabLayout)
     TabLayout mTabLayout;
     @Bind(R.id.viewPager)
-    ViewPager mViewPager;
+    InterceptorViewPager mViewPager;
 
     private PagerAdapter mAdapter;
 

@@ -6,12 +6,12 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.djr.multipleviewpager.R;
-import com.djr.multipleviewpager.viewpager.InterceptorViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class DiscoveryFragment extends Fragment {
     @Bind(R.id.tabLayout)
     TabLayout mTabLayout;
     @Bind(R.id.viewPager)
-    InterceptorViewPager mViewPager;
+    ViewPager mViewPager;
 
     private PagerAdapter mAdapter;
 

@@ -5,6 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 
 /**
  * Created by DongJr on 2017/3/20.
@@ -12,7 +13,6 @@ import android.view.MotionEvent;
 
 public class InterceptorViewPager extends ViewPager {
 
-    private float startX;
 
     public InterceptorViewPager(Context context) {
         this(context, null);
@@ -23,41 +23,41 @@ public class InterceptorViewPager extends ViewPager {
     }
 
     @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        Log.e("dong", "onInterceptTouchEvent");
 
-        float moveX;
-        float offsetX;
+        return super.onInterceptTouchEvent(ev);
+    }
 
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                startX = ev.getX();
-                getParent().requestDisallowInterceptTouchEvent(true);
-                break;
-            case MotionEvent.ACTION_MOVE:
-                moveX = ev.getX();
-                offsetX = moveX - startX;
-                if (offsetX < 0) {
-                    //当滑动最后一个条目时,让父view处理事件
-                    if (getCurrentItem() == getAdapter().getCount() - 1) {
-                        getParent().requestDisallowInterceptTouchEvent(false);
-                    } else {
-                        getParent().requestDisallowInterceptTouchEvent(true);
-                    }
-                } else {
-                    //当滑动第一个条目时,让父view处理事件
-                    if (getCurrentItem() == 0) {
-                        getParent().requestDisallowInterceptTouchEvent(false);
-                    } else {
-                        getParent().requestDisallowInterceptTouchEvent(true);
-                    }
-                }
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
 
-                Log.e("dispatchTouchEvent","dispatchTouchEvent  "+ offsetX);
-                break;
-            default:
-                break;
+        Log.e("dong", "onTouchEvent");
+
+
+        return super.onTouchEvent(ev);
+    }
+
+
+    @Override
+    protected boolean canScroll(View v, boolean checkV, int dx, int x, int y) {
+        if (v != this && v instanceof ViewPager) {
+            int currentItem = ((ViewPager) v).getCurrentItem();
+            int countItem = ((ViewPager) v).getAdapter().getCount();
+            if ((currentItem == (countItem - 1) && dx < 0) || (currentItem == 0 && dx > 0)) {
+                Log.e("dong", "canScroll perform");
+                return false;
+            }
+            return true;
         }
+        return super.canScroll(v, checkV, dx, x, y);
+    }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        Log.e("dong", "dispatchTouchEvent");
         return super.dispatchTouchEvent(ev);
     }
+
+
 }
